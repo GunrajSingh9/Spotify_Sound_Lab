@@ -412,11 +412,27 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-6 py-8">
-        {/* Tabs */}
+        {/* Tabs - Fluid Animation */}
         <div 
-          className="flex gap-1 p-1 rounded-xl border mb-8"
+          className="relative flex gap-1 p-1 rounded-xl border mb-8"
           style={{ backgroundColor: colors.surface, borderColor: colors.border }}
         >
+          {/* Animated Background Pill */}
+          <motion.div
+            className="absolute top-1 bottom-1 rounded-lg"
+            style={{ backgroundColor: colors.primary }}
+            initial={false}
+            animate={{
+              left: `${["overview", "analysis", "trends", "personality"].indexOf(activeTab) * 25 + 0.25}%`,
+              width: "24.5%",
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 400,
+              damping: 30,
+              mass: 0.8,
+            }}
+          />
           {[
             { id: "overview", label: "Overview", icon: Fire },
             { id: "analysis", label: "Analysis", icon: ChartBar },
@@ -426,14 +442,37 @@ export default function Home() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium text-sm transition-all"
+              className="relative flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium text-sm z-10"
               style={{
-                backgroundColor: activeTab === tab.id ? colors.primary : "transparent",
                 color: activeTab === tab.id ? colors.background : colors.text.secondary,
               }}
             >
-              <tab.icon size={18} weight={activeTab === tab.id ? "fill" : "regular"} />
-              {tab.label}
+              <motion.div
+                initial={false}
+                animate={{ 
+                  scale: activeTab === tab.id ? 1.1 : 1,
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 25,
+                }}
+              >
+                <tab.icon size={18} weight={activeTab === tab.id ? "fill" : "regular"} />
+              </motion.div>
+              <motion.span
+                initial={false}
+                animate={{
+                  fontWeight: activeTab === tab.id ? 600 : 500,
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 25,
+                }}
+              >
+                {tab.label}
+              </motion.span>
             </button>
           ))}
         </div>

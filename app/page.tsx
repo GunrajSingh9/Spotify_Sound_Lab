@@ -193,22 +193,27 @@ export default function Home() {
   const handleShare = () => {
     const text = `My Spotify Sound Lab Results: ${selectedPersonality.type}!\n\n📊 Key Stats:\n• 47,392 minutes listened\n• 1,384 unique artists\n• Top Genre: Pop (32%)\n\n🎭 Personality: ${selectedPersonality.traits.join(", ")}\n\nDecode your music DNA!`;
     navigator.clipboard.writeText(text);
+    alert("Results copied to clipboard!");
+  };
+
+  const handleDownload = () => {
+    alert("Download started!");
   };
 
   // Loading Screen
   if (isConnecting) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center" style={{ backgroundColor: colors.background }}>
+      <div className="min-h-screen flex flex-col items-center justify-center overflow-x-hidden" style={{ backgroundColor: colors.background }}>
         <div className="relative z-10 text-center max-w-md px-6">
           <motion.div
-            className="w-24 h-24 mx-auto mb-8 relative"
+            className="w-24 h-24 mx-auto mb-8 relative select-none"
             animate={{ rotate: 360 }}
             transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
           >
             <div className="absolute inset-0 rounded-full border-2 border-[#1DB954] border-t-transparent" />
             <div className="absolute inset-2 rounded-full border-2 border-[#1DB954]/50 border-b-transparent" />
             <div className="absolute inset-4 flex items-center justify-center">
-              <Disc size={40} weight="fill" style={{ color: colors.primary }} />
+              <Disc size={40} weight="fill" style={{ color: colors.primary }} className="select-none" />
             </div>
           </motion.div>
 
@@ -222,20 +227,20 @@ export default function Home() {
                   key={idx}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: isActive || isComplete ? 1 : 0.3, x: 0 }}
-                  className="flex items-center gap-4 p-4 rounded-xl border transition-all"
+                  className="flex items-center gap-4 p-4 rounded-xl border transition-all select-none"
                   style={{
                     backgroundColor: isActive ? colors.surface : isComplete ? `${colors.primary}15` : colors.surface,
                     borderColor: isActive ? colors.primary : isComplete ? `${colors.primary}50` : colors.border,
                   }}
                 >
                   <div 
-                    className="w-10 h-10 rounded-lg flex items-center justify-center"
+                    className="w-10 h-10 rounded-lg flex items-center justify-center select-none"
                     style={{
                       backgroundColor: isComplete ? colors.primary : isActive ? `${colors.primary}30` : colors.surfaceHover,
                       color: isComplete || isActive ? colors.background : colors.text.tertiary,
                     }}
                   >
-                    {isComplete ? <Check size={20} weight="bold" /> : <step.icon size={20} />}
+                    {isComplete ? <Check size={20} weight="bold" className="select-none" /> : <step.icon size={20} className="select-none" />}
                   </div>
                   <span 
                     className="flex-1 font-medium"
@@ -271,7 +276,7 @@ export default function Home() {
   // Landing Page
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen" style={{ backgroundColor: colors.background }}>
+      <div className="min-h-screen overflow-x-hidden" style={{ backgroundColor: colors.background }}>
         <div className="max-w-6xl mx-auto px-6 py-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -279,10 +284,10 @@ export default function Home() {
             className="text-center"
           >
             <div 
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-8"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-8 select-none"
               style={{ backgroundColor: colors.surface, borderColor: colors.border }}
             >
-              <Sparkle size={16} style={{ color: colors.primary }} />
+              <Sparkle size={16} style={{ color: colors.primary }} className="select-none" />
               <span className="text-sm" style={{ color: colors.text.secondary }}>
                 Analyze your Spotify listening habits
               </span>
@@ -299,54 +304,148 @@ export default function Home() {
               and uncover your unique sound identity.
             </p>
 
-            {/* 4-Box Bento Features */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-12">
-              {[
-                { icon: "pulse", title: "Deep Analysis", desc: "Audio features & patterns", colSpan: 1 },
-                { icon: "trend", title: "Track Evolution", desc: "See how taste changes", colSpan: 1 },
-                { icon: "sparkle", title: "Personality Match", desc: "Discover your persona", colSpan: 1 },
-                { icon: "music", title: "Music Discovery", desc: "Find new favorites", colSpan: 1 },
-              ].map((feature, idx) => (
-                <motion.div
-                  key={idx}
-                  className="group p-6 rounded-2xl border cursor-pointer"
-                  style={{ backgroundColor: colors.surface, borderColor: colors.border }}
-                  whileHover={{ scale: 1.02, y: -4 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                >
-                  <IconMorph
-                    icon={feature.icon}
-                    size={32}
-                    color={colors.primary}
-                    className="mb-4"
-                  />
-                  <h3 className="font-semibold mb-1" style={{ color: colors.text.primary }}>
-                    {feature.title}
-                  </h3>
-                  <p className="text-sm" style={{ color: colors.text.secondary }}>
-                    {feature.desc}
-                  </p>
-                </motion.div>
-              ))}
+            {/* Aceternity-style Bento Grid */}
+            <div 
+              className="grid gap-4 max-w-4xl mx-auto mb-12"
+              style={{
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gridTemplateRows: "repeat(2, 200px)",
+                gridTemplateAreas: `
+                  "deep deep track"
+                  "personality discovery track"
+                `,
+              }}
+            >
+              {/* Deep Analysis - Large (2x2) */}
+              <motion.div
+                className="group relative p-8 rounded-3xl border cursor-pointer overflow-hidden select-none"
+                style={{ 
+                  backgroundColor: colors.surface, 
+                  borderColor: colors.border,
+                  gridArea: "deep",
+                }}
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-[#1DB954]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-[0_0_40px_rgba(29,185,84,0.3)]" />
+                <div className="relative z-10 h-full flex flex-col justify-between">
+                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 select-none" style={{ backgroundColor: `${colors.primary}20` }}>
+                    <Pulse size={36} style={{ color: colors.primary }} className="select-none" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold mb-2" style={{ color: colors.text.primary }}>
+                      Deep Analysis
+                    </h3>
+                    <p className="text-base" style={{ color: colors.text.secondary }}>
+                      Audio features & listening patterns decoded with AI precision
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Track Evolution - Tall (1x2) */}
+              <motion.div
+                className="group relative p-6 rounded-3xl border cursor-pointer overflow-hidden select-none"
+                style={{ 
+                  backgroundColor: colors.surface, 
+                  borderColor: colors.border,
+                  gridArea: "track",
+                }}
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1DB954]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-[0_0_40px_rgba(29,185,84,0.3)]" />
+                <div className="relative z-10 h-full flex flex-col justify-between">
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 select-none" style={{ backgroundColor: `${colors.primary}20` }}>
+                    <TrendUp size={28} style={{ color: colors.primary }} className="select-none" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2" style={{ color: colors.text.primary }}>
+                      Track Evolution
+                    </h3>
+                    <p className="text-sm" style={{ color: colors.text.secondary }}>
+                      See how your taste changes over time
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Personality Match - Small (1x1) */}
+              <motion.div
+                className="group relative p-6 rounded-3xl border cursor-pointer overflow-hidden select-none"
+                style={{ 
+                  backgroundColor: colors.surface, 
+                  borderColor: colors.border,
+                  gridArea: "personality",
+                }}
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-[#1DB954]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-[0_0_40px_rgba(29,185,84,0.3)]" />
+                <div className="relative z-10 h-full flex flex-col justify-between">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-3 select-none" style={{ backgroundColor: `${colors.primary}20` }}>
+                    <Sparkle size={24} style={{ color: colors.primary }} className="select-none" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold mb-1" style={{ color: colors.text.primary }}>
+                      Personality
+                    </h3>
+                    <p className="text-sm" style={{ color: colors.text.secondary }}>
+                      Discover your musical persona
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Music Discovery - Small (1x1) */}
+              <motion.div
+                className="group relative p-6 rounded-3xl border cursor-pointer overflow-hidden select-none"
+                style={{ 
+                  backgroundColor: colors.surface, 
+                  borderColor: colors.border,
+                  gridArea: "discovery",
+                }}
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-[#1DB954]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-[0_0_40px_rgba(29,185,84,0.3)]" />
+                <div className="relative z-10 h-full flex flex-col justify-between">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-3 select-none" style={{ backgroundColor: `${colors.primary}20` }}>
+                    <MusicNotes size={24} style={{ color: colors.primary }} className="select-none" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold mb-1" style={{ color: colors.text.primary }}>
+                      Discovery
+                    </h3>
+                    <p className="text-sm" style={{ color: colors.text.secondary }}>
+                      Find new favorites
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
             </div>
 
             <Button
               onClick={handleConnect}
-              className="h-14 px-8 text-lg font-semibold rounded-full"
+              className="h-14 px-8 text-lg font-semibold rounded-full select-none"
               style={{ 
                 backgroundColor: colors.primary, 
                 color: colors.background,
               }}
             >
-              <Disc size={24} className="mr-2" />
+              <Disc size={24} className="mr-2 select-none" />
               Analyze My Music
-              <ArrowRight size={20} className="ml-2" />
+              <ArrowRight size={20} className="ml-2 select-none" />
             </Button>
 
-            <div className="mt-8 flex items-center justify-center gap-6 text-sm" style={{ color: colors.text.secondary }}>
+            <div className="mt-8 flex items-center justify-center gap-6 text-sm select-none" style={{ color: colors.text.secondary }}>
               {["No data stored", "Privacy focused", "Generalized insights"].map((item, idx) => (
                 <span key={idx} className="flex items-center gap-2">
-                  <Check size={14} style={{ color: colors.primary }} />
+                  <Check size={14} style={{ color: colors.primary }} className="select-none" />
                   {item}
                 </span>
               ))}
@@ -359,10 +458,10 @@ export default function Home() {
 
   // Dashboard
   return (
-    <div className="min-h-screen" style={{ backgroundColor: colors.background }}>
+    <div className="min-h-screen overflow-x-hidden" style={{ backgroundColor: colors.background }}>
       {/* Header */}
       <header 
-        className="sticky top-0 z-50 border-b"
+        className="sticky top-0 z-50 border-b select-none"
         style={{ 
           backgroundColor: `${colors.background}CC`, 
           backdropFilter: "blur(20px)",
@@ -372,10 +471,10 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div 
-              className="w-10 h-10 rounded-full flex items-center justify-center"
+              className="w-10 h-10 rounded-full flex items-center justify-center select-none"
               style={{ backgroundColor: colors.primary }}
             >
-              <MusicNotes size={20} weight="fill" style={{ color: colors.background }} />
+              <MusicNotes size={20} weight="fill" style={{ color: colors.background }} className="select-none" />
             </div>
             <div>
               <h1 className="font-semibold" style={{ color: colors.text.primary }}>
@@ -392,18 +491,19 @@ export default function Home() {
               variant="outline" 
               size="sm" 
               onClick={handleShare}
-              className="border rounded-lg"
+              className="border rounded-lg select-none"
               style={{ borderColor: colors.border, backgroundColor: colors.surface }}
             >
-              <ShareNetwork size={16} className="mr-2" style={{ color: colors.text.secondary }} />
+              <ShareNetwork size={16} className="mr-2 select-none" style={{ color: colors.text.secondary }} />
               <span style={{ color: colors.text.primary }}>Share</span>
             </Button>
             <Button 
               size="sm" 
-              className="rounded-lg"
+              onClick={handleDownload}
+              className="rounded-lg select-none"
               style={{ backgroundColor: colors.primary, color: colors.background }}
             >
-              <Download size={16} className="mr-2" />
+              <Download size={16} className="mr-2 select-none" />
               Download
             </Button>
           </div>
@@ -414,12 +514,12 @@ export default function Home() {
       <main className="max-w-6xl mx-auto px-6 py-8">
         {/* Tabs - Fluid Animation */}
         <div 
-          className="relative flex gap-1 p-1 rounded-xl border mb-8"
+          className="relative flex gap-1 p-1 rounded-xl border mb-8 select-none"
           style={{ backgroundColor: colors.surface, borderColor: colors.border }}
         >
           {/* Animated Background Pill */}
           <motion.div
-            className="absolute top-1 bottom-1 rounded-lg"
+            className="absolute top-1 bottom-1 rounded-lg select-none"
             style={{ backgroundColor: colors.primary }}
             initial={false}
             animate={{
@@ -442,7 +542,7 @@ export default function Home() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className="relative flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium text-sm z-10"
+              className="relative flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium text-sm z-10 select-none"
               style={{
                 color: activeTab === tab.id ? colors.background : colors.text.secondary,
               }}
@@ -457,8 +557,9 @@ export default function Home() {
                   stiffness: 400,
                   damping: 25,
                 }}
+                className="select-none"
               >
-                <tab.icon size={18} weight={activeTab === tab.id ? "fill" : "regular"} />
+                <tab.icon size={18} weight={activeTab === tab.id ? "fill" : "regular"} className="select-none" />
               </motion.div>
               <motion.span
                 initial={false}
@@ -488,7 +589,7 @@ export default function Home() {
             >
               {/* Key Insight */}
               <Card 
-                className="border"
+                className="border select-none"
                 style={{ 
                   background: `linear-gradient(135deg, ${colors.primary}20, ${colors.primary}10)`,
                   borderColor: `${colors.primary}40`,
@@ -497,14 +598,14 @@ export default function Home() {
                 <CardContent className="p-6">
                   <div className="flex items-start gap-4">
                     <div 
-                      className="p-3 rounded-xl"
+                      className="p-3 rounded-xl select-none"
                       style={{ backgroundColor: `${colors.primary}30` }}
                     >
-                      <Fire size={24} style={{ color: colors.primary }} />
+                      <Fire size={24} style={{ color: colors.primary }} className="select-none" />
                     </div>
                     <div>
                       <Badge 
-                        className="mb-2 border-0"
+                        className="mb-2 border-0 select-none"
                         style={{ 
                           backgroundColor: `${colors.primary}30`, 
                           color: colors.primary,
@@ -528,11 +629,11 @@ export default function Home() {
                 {statsData.map((stat, idx) => (
                   <Card 
                     key={idx} 
-                    className="border"
+                    className="border select-none"
                     style={{ backgroundColor: colors.surface, borderColor: colors.border }}
                   >
                     <CardContent className="p-4 text-center">
-                      <stat.icon size={28} style={{ color: colors.primary }} className="mx-auto mb-3" weight="duotone" />
+                      <stat.icon size={28} style={{ color: colors.primary }} className="mx-auto mb-3 select-none" weight="duotone" />
                       <div className="text-3xl font-bold mb-1" style={{ color: colors.text.primary }}>
                         {stat.value}
                       </div>
@@ -553,12 +654,12 @@ export default function Home() {
                   className="border"
                   style={{ backgroundColor: colors.surface, borderColor: colors.border }}
                 >
-                  <CardHeader>
+                  <CardHeader className="select-none">
                     <CardTitle 
                       className="flex items-center gap-2 text-base"
                       style={{ color: colors.text.primary }}
                     >
-                      <Heart size={18} weight="fill" style={{ color: colors.primary }} />
+                      <Heart size={18} weight="fill" style={{ color: colors.primary }} className="select-none" />
                       Top Artists
                     </CardTitle>
                   </CardHeader>
@@ -570,7 +671,7 @@ export default function Home() {
                         style={{ backgroundColor: colors.surfaceHover }}
                       >
                         <div 
-                          className="w-10 h-10 rounded-lg flex items-center justify-center text-lg font-bold"
+                          className="w-10 h-10 rounded-lg flex items-center justify-center text-lg font-bold select-none"
                           style={{ 
                             backgroundColor: colors.border,
                             color: colors.text.primary,
@@ -603,12 +704,12 @@ export default function Home() {
                   className="border"
                   style={{ backgroundColor: colors.surface, borderColor: colors.border }}
                 >
-                  <CardHeader>
+                  <CardHeader className="select-none">
                     <CardTitle 
                       className="flex items-center gap-2 text-base"
                       style={{ color: colors.text.primary }}
                     >
-                      <Play size={18} weight="fill" style={{ color: colors.primary }} />
+                      <Play size={18} weight="fill" style={{ color: colors.primary }} className="select-none" />
                       Top Tracks
                     </CardTitle>
                   </CardHeader>
@@ -620,7 +721,7 @@ export default function Home() {
                         style={{ backgroundColor: colors.surfaceHover }}
                       >
                         <div 
-                          className="w-8 h-8 rounded flex items-center justify-center text-sm font-bold"
+                          className="w-8 h-8 rounded flex items-center justify-center text-sm font-bold select-none"
                           style={{ 
                             backgroundColor: colors.border,
                             color: colors.text.primary,
@@ -637,7 +738,7 @@ export default function Home() {
                           </div>
                         </div>
                         <div 
-                          className="text-right text-sm"
+                          className="text-right text-sm select-none"
                           style={{ color: colors.text.tertiary }}
                         >
                           {track.duration}
@@ -659,7 +760,7 @@ export default function Home() {
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card 
-                  className="border"
+                  className="border select-none"
                   style={{ backgroundColor: colors.surface, borderColor: colors.border }}
                 >
                   <CardHeader>
@@ -667,7 +768,7 @@ export default function Home() {
                       className="flex items-center gap-2 text-base"
                       style={{ color: colors.text.primary }}
                     >
-                      <Pulse size={18} style={{ color: colors.primary }} />
+                      <Pulse size={18} style={{ color: colors.primary }} className="select-none" />
                       Audio Features
                     </CardTitle>
                   </CardHeader>
@@ -695,12 +796,12 @@ export default function Home() {
                   className="border"
                   style={{ backgroundColor: colors.surface, borderColor: colors.border }}
                 >
-                  <CardHeader>
+                  <CardHeader className="select-none">
                     <CardTitle 
                       className="flex items-center gap-2 text-base"
                       style={{ color: colors.text.primary }}
                     >
-                      <Equalizer size={18} style={{ color: colors.primary }} />
+                      <Equalizer size={18} style={{ color: colors.primary }} className="select-none" />
                       Genre Distribution
                     </CardTitle>
                   </CardHeader>
@@ -730,7 +831,7 @@ export default function Home() {
               </div>
 
               <Card 
-                className="border"
+                className="border select-none"
                 style={{ backgroundColor: colors.surface, borderColor: colors.border }}
               >
                 <CardHeader>
@@ -738,7 +839,7 @@ export default function Home() {
                     className="flex items-center gap-2 text-base"
                     style={{ color: colors.text.primary }}
                   >
-                    <Calendar size={18} style={{ color: colors.primary }} />
+                    <Calendar size={18} style={{ color: colors.primary }} className="select-none" />
                     Weekly Listening Patterns
                   </CardTitle>
                 </CardHeader>
@@ -764,7 +865,7 @@ export default function Home() {
               className="space-y-6"
             >
               <Card 
-                className="border"
+                className="border select-none"
                 style={{ backgroundColor: colors.surface, borderColor: colors.border }}
               >
                 <CardHeader>
@@ -772,7 +873,7 @@ export default function Home() {
                     className="flex items-center gap-2 text-base"
                     style={{ color: colors.text.primary }}
                   >
-                    <TrendUp size={18} style={{ color: colors.primary }} />
+                    <TrendUp size={18} style={{ color: colors.primary }} className="select-none" />
                     Mood Evolution Over Time
                   </CardTitle>
                 </CardHeader>
@@ -825,7 +926,7 @@ export default function Home() {
               className="space-y-6"
             >
               <Card 
-                className="border"
+                className="border select-none"
                 style={{ 
                   background: `linear-gradient(135deg, ${colors.primary}30, ${colors.primary}15)`,
                   borderColor: `${colors.primary}50`,
@@ -836,7 +937,7 @@ export default function Home() {
                     size={64} 
                     weight="fill" 
                     style={{ color: colors.primary }} 
-                    className="mx-auto mb-4" 
+                    className="mx-auto mb-4 select-none" 
                   />
                   <h2 
                     className="text-3xl font-bold mb-2"
@@ -854,7 +955,7 @@ export default function Home() {
                     {selectedPersonality.traits.map((trait, idx) => (
                       <Badge 
                         key={idx} 
-                        className="border-0 px-3 py-1"
+                        className="border-0 px-3 py-1 select-none"
                         style={{ 
                           backgroundColor: `${colors.primary}40`,
                           color: colors.text.primary,
@@ -873,7 +974,7 @@ export default function Home() {
                   .map((personality, idx) => (
                     <Card
                       key={idx}
-                      className="border cursor-pointer transition-colors"
+                      className="border cursor-pointer transition-colors select-none"
                       style={{ 
                         backgroundColor: colors.surface, 
                         borderColor: colors.border,
@@ -885,7 +986,7 @@ export default function Home() {
                           size={48} 
                           weight="duotone"
                           style={{ color: colors.text.secondary }} 
-                          className="mx-auto mb-3" 
+                          className="mx-auto mb-3 select-none" 
                         />
                         <h3 
                           className="font-semibold mb-2"
@@ -905,7 +1006,7 @@ export default function Home() {
               </div>
 
               <Card 
-                className="border"
+                className="border select-none"
                 style={{ 
                   backgroundColor: `${colors.primary}15`,
                   borderColor: `${colors.primary}40`,
@@ -926,13 +1027,13 @@ export default function Home() {
                     </div>
                     <Button 
                       onClick={handleShare}
-                      className="rounded-lg"
+                      className="rounded-lg select-none"
                       style={{ 
                         backgroundColor: colors.primary, 
                         color: colors.background,
                       }}
                     >
-                      <ShareNetwork size={18} className="mr-2" />
+                      <ShareNetwork size={18} className="mr-2 select-none" />
                       Share Results
                     </Button>
                   </div>

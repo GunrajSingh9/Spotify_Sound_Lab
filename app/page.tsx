@@ -52,7 +52,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MorphingIcon, IconMorph } from "@/components/MorphingIcon";
 
-// COSS UI Color System
+// COSS UI Color System - Fixed Contrast
 const colors = {
   primary: "#1DB954",
   primaryHover: "#1ed760",
@@ -62,8 +62,8 @@ const colors = {
   border: "#2a2a2a",
   text: {
     primary: "#ffffff",
-    secondary: "#a1a1aa",
-    tertiary: "#71717a",
+    secondary: "#d4d4d8",  // was #a1a1aa - too dark
+    tertiary: "#a1a1aa",   // was #71717a - too dark
   },
 };
 
